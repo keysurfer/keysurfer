@@ -169,4 +169,5 @@ $(document).ready(function () {
     $('body').append(elem);
 
     Mousetrap.bind('command+shift+space', toggleKeyboarder);
+    Mousetrap.bind('ctrl+shift+space', toggleKeyboarder);
 });
