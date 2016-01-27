@@ -1,0 +1,34 @@
+#keyboarder-main {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 10000;
+    display: none;
+}
+
+#keyboarder-content {
+    background: white;
+    border-top: 1px solid #4c4c4c;
+    border-right: 1px solid #4c4c4c;
+    border-left: 1px solid #4c4c4c;
+    width: 300px;
+    margin: 0 auto;
+    padding: 5px;
+}
+
+#keyboarder-content input {
+    padding: 10px 0;
+    margin: 0;
+    width: 100%;
+}
+
+.keyboarder-overlay {
+    position: absolute;
+    z-index: 9999;
+    background: rgba(150, 239, 215, 0.5);
+    border: 1px solid rgba(53, 106, 87, 0.5);
+}
+
+.keyboarder-overlay.keyboarder-selected {
+    border: 1px solid rgba(255, 0, 0, 0.5);
+}
