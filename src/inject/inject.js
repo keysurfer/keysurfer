@@ -164,7 +164,11 @@ $(document).ready(function () {
     input = elem.find('input');
 
     input.on('keyup', _.debounce(updateInput, 500));
-    input.on('focusout', toggleKeyboarder);
+    input.on('focusout', function () {
+        if (active) {
+            toggleKeyboarder();
+        }
+    });
 
     $('body').append(elem);
 
