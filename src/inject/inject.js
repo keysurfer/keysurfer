@@ -3,6 +3,7 @@ var active = false, // If keyboarder is active.
     elem,
     $status,
     input,
+    top10 = [],
     prevTarget = '',// Previous entry in the input field.
     overlays = [], // List of overlay jQuery objects [overlayElem, elem]
     selectedIndex,// Index of overlays referring to selected.
@@ -15,7 +16,7 @@ function newOverlay(elem) {
         useElem = elem.parent();
     }
 
-    var overlay = $('<div class="keyboarder-overlay"></div>');
+    var overlay = $('<div class="keyboarder-overlay"><div class="keyboarder-number"></div></div>');
     overlay.width(useElem.outerWidth());
     overlay.height(useElem.outerHeight());
     overlay.offset(useElem.offset());
@@ -71,9 +72,58 @@ function bisectLeft(y) {
     return low;
 }
 
+function resetTop10() {
+    // Remove old top 10.
+    _.each(top10, function (overlay) {
+        overlay.overlayElem.find('.keyboarder-number').hide();
+    });
+
+    top10 = [];
+
+    // Find new top 10.
+    for (var i = (selectedIndex + 1) % overlays.length;
+         i != selectedIndex && top10.length < 10;
+         i = (i + 1) % overlays.length) {
+        var overlay = overlays[i];
+
+        // If it's beyond the bottom of the screen then stop looking.
+        if (overlay.elem.offset().top > window.scrollY + window.innerHeight) {
+            break;
+        }
+
+        // If it's above the top of the screen then stop looking.
+        if (overlay.elem.offset().top < window.scrollY) {
+            break;
+        }
+
+        top10.push(overlay);
+        overlay.overlayElem.find('.keyboarder-number').show().text('alt+' + top10.length);
+    }
+
+    overlays[selectedIndex].overlayElem.find('.keyboarder-number').show().text('enter');
+}
+
+function doTop10(event, combo) {
+    if (!active) {
+        return true;
+    }
+
+    // Get what number was pressed.
+    var number = Number(combo.substr(combo.length - 1));
+
+    // See if a top 10 exists for it.
+    if (number > top10.length) {
+        return true;
+    }
+
+    top10[number - 1].elem[0].click();
+    return false;
+}
+
 function updateSelected(newIndex) {
     if (selected) {
         overlays[selectedIndex].overlayElem.removeClass('keyboarder-selected');
+        overlays[selectedIndex].overlayElem.find('.keyboarder-number').hide();
     }
 
     selectedIndex = newIndex % overlays.length;
@@ -85,8 +135,8 @@ function updateSelected(newIndex) {
     overlays[selectedIndex].overlayElem.addClass('keyboarder-selected');
 
     $('html, body').animate({
-        scrollTop: selected.offset().top
-    }, 100);
+        scrollTop: selected.offset().top - 10
+    }, 100, resetTop10);
 
     $status.text((selectedIndex + 1) + ' of ' + overlays.length);
 }
@@ -146,6 +196,8 @@ function updateInput(event) {
 
     if (overlays.length > 0) {
         updateSelected(bisectLeft(window.scrollY));
+    } else {
+        $status.text('No links match');
     }
 }
 
@@ -203,4 +255,5 @@ $(document).ready(function () {
 
     Mousetrap.bind('command+shift+space', toggleKeyboarder);
     Mousetrap.bind('ctrl+shift+space', toggleKeyboarder);
+    Mousetrap.bind(['alt+1', 'alt+2', 'alt+3', 'alt+4', 'alt+5', 'alt+6', 'alt+7', 'alt+8', 'alt+9'], doTop10);
 });

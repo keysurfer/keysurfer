@@ -35,6 +35,19 @@
     border: 1px solid rgba(53, 106, 87, 0.5);
 }
 
+.keyboarder-number {
+    display: none;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    padding: 0 5px;
+    height: 20px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: rgba(17, 175, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
 .keyboarder-overlay.keyboarder-selected {
     border: 3px solid rgba(255, 0, 0, 0.5);
     background: rgba(239, 151, 119, 0.3);
