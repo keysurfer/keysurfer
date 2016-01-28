@@ -1,5 +1,5 @@
 var active = false, // If keyboarder is active.
-    links = [], // [{elem, text}]
+    links = [], // [{elem, text}], sorted by elem's top offset.
     elem,
     input,
     prevTarget = '',// Previous entry in the input field.
@@ -49,6 +49,25 @@ function toggleKeyboarder() {
         elem.show();
         input.focus();
     }
+}
+
+function bisectLeft(y) {
+    var low = 0;
+    var high = overlays.length;
+    var mid;
+    var item;
+
+    while (low < high) {
+        mid = Math.floor((low + high) / 2);
+        item = overlays[mid].elem.offset().top;
+
+        if (item < y) {
+            low = mid + 1;
+        } else {
+            high = mid;
+        }
+    }
+    return low;
 }
 
 function updateSelected(newIndex) {
@@ -106,6 +125,10 @@ function updateInput(event) {
     overlays = [];
     selected = null;
 
+    if (target.length === 0) {
+        return;
+    }
+
     _.each(links, function (link) {
         if (link.text.startsWith(target) && link.elem.is(':visible')) {
             var overlay = newOverlay(link.elem);
@@ -118,7 +141,7 @@ function updateInput(event) {
     });
 
     if (overlays.length > 0) {
-        updateSelected(0);
+        updateSelected(bisectLeft(window.scrollY));
     }
 }
 
