@@ -1,6 +1,6 @@
 {
   "name": "Key Surfer",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "manifest_version": 2,
   "description": "Navigate websites without using your mouse.",
   "options_ui": {

@@ -225,14 +225,46 @@ $(document).ready(function () {
         }
     });
 
+    // List of inputs we've already added to the list of links.
+    var seenInputs = {};
+
     $('input[type="submit"]').each(function (i, e) {
         var $e = $(e);
         var text = $e.val().trim().toLowerCase();
+
         if (text !== '') {
+            seenInputs[$e[0].outerHTML] = true;
             links.push({
                 elem: $e,
                 text: text
             })
+        }
+    });
+
+    $('label[for]').each(function (i, e) {
+        var $label = $(e);
+        var $input = $('#' + $label.attr('for'));
+
+        var text = $label.text().trim().toLowerCase();
+        if ($input.length && text !== '' && !seenInputs[$input[0]]) {
+            seenInputs[$input[0].outerHTML] = true;
+            links.push({
+                elem: $input,
+                text: text
+            });
+        }
+    });
+
+    $('input[placeholder]').each(function (i, e) {
+        var $input = $(e);
+        var text = $(e).attr('placeholder').trim().toLowerCase();
+
+        if (text !== '' && !seenInputs[$input[0].outerHTML]) {
+            seenInputs[$input[0].outerHTML] = true;
+            links.push({
+                elem: $input,
+                text: text
+            });
         }
     });
 
