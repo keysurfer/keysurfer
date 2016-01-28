@@ -98,7 +98,6 @@ function updateInput(event) {
         return;
     }
     prevTarget = target;
-    console.log(target);
 
     _.each(overlays, function (overlay) {
         overlay.overlayElem.remove();
@@ -165,7 +164,7 @@ $(document).ready(function () {
     elem = $('<div id="keyboarder-main"><div id="keyboarder-content"><input type="text" /></div></div>');
     input = elem.find('input');
 
-    input.on('keyup', _.debounce(updateInput, 500));
+    input.on('keyup', updateInput);
     input.on('focusout', function () {
         if (active) {
             toggleKeyboarder();
