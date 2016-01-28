@@ -38,8 +38,8 @@
 .keyboarder-number {
     display: none;
     position: absolute;
-    top: -10px;
-    left: -10px;
+    top: -8px;
+    right: -45px;
     padding: 0 5px;
     height: 20px;
     text-align: center;
