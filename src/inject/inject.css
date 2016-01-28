@@ -25,10 +25,11 @@
 .keyboarder-overlay {
     position: absolute;
     z-index: 9999;
-    background: rgba(150, 239, 215, 0.5);
+    background: rgba(150, 239, 215, 0.1);
     border: 1px solid rgba(53, 106, 87, 0.5);
 }
 
 .keyboarder-overlay.keyboarder-selected {
-    border: 1px solid rgba(255, 0, 0, 0.5);
+    border: 3px solid rgba(255, 0, 0, 0.5);
+    background: rgba(150, 239, 215, 0.3);
 }
