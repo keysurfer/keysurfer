@@ -64,7 +64,7 @@ Overlay.prototype.isOnScreen = function () {
 };
 
 Overlay.prototype.click = function () {
-    if (this.$link.prop('tagName') === 'INPUT') {
+    if (this.$link.prop('tagName') === 'INPUT' && this.$link.attr('type') !== 'submit') {
         this.$link.focus();
     } else {
         this.$link[0].click();
