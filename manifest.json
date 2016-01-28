@@ -23,6 +23,9 @@
     "http://*/*",
     "storage"
   ],
+  "optional_permissions": [
+    "file://*/*"
+  ],
   "content_scripts": [
     {
       "matches": [
