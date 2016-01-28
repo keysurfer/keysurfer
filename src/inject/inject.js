@@ -101,7 +101,7 @@ function doTop10(event, combo) {
         return true;
     }
 
-    top10[number - 1].elem[0].click();
+    top10[number - 1].click();
     return false;
 }
 
