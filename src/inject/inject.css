@@ -16,10 +16,16 @@
     padding: 5px;
 }
 
+#keyboarder-status {
+    color: #7c7c7c;
+    text-align: center;
+    display: inline-block;
+    width: 80px;
+    vertical-align: middle;
+}
+
 #keyboarder-content input {
-    padding: 10px 0;
-    margin: 0;
-    width: 100%;
+    width: 200px;
 }
 
 .keyboarder-overlay {

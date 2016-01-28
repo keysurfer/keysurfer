@@ -1,6 +1,7 @@
 var active = false, // If keyboarder is active.
     links = [], // [{elem, text}], sorted by elem's top offset.
     elem,
+    $status,
     input,
     prevTarget = '',// Previous entry in the input field.
     overlays = [], // List of overlay jQuery objects [overlayElem, elem]
@@ -86,6 +87,8 @@ function updateSelected(newIndex) {
     $('html, body').animate({
         scrollTop: selected.offset().top
     }, 100);
+
+    $status.text((selectedIndex + 1) + ' of ' + overlays.length);
 }
 
 function updateInput(event) {
@@ -126,6 +129,7 @@ function updateInput(event) {
     selected = null;
 
     if (target.length === 0) {
+        $status.text('');
         return;
     }
 
@@ -184,8 +188,9 @@ $(document).ready(function () {
         return link.elem.offset().top;
     });
 
-    elem = $('<div id="keyboarder-main"><div id="keyboarder-content"><input type="text" /></div></div>');
+    elem = $('<div id="keyboarder-main"><div id="keyboarder-content"><input type="text" /><div id="keyboarder-status"></div></div></div></div>');
     input = elem.find('input');
+    $status = elem.find('#keyboarder-status');
 
     input.on('keyup', updateInput);
     input.on('focusout', function () {
