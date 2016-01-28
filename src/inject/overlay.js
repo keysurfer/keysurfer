@@ -4,8 +4,14 @@ function Overlay($link) {
     // The element to use for Overlay positioning and sizing.
     var $positionElement = $link;
 
+    // If the parent is a list element see if the link is the only child in the list element.
+    // If it is the only child then use the parent list element for the overlay.
     if (this.$link.parent().prop('tagName') === 'LI') {
-        $positionElement = $link.parent();
+        var parentText = this.$link.parent().text().trim().toLowerCase();
+        var linkText = this.$link.text().trim().toLowerCase();
+        if (linkText === parentText) {
+            $positionElement = $link.parent();
+        }
     }
 
     this.$overlayElem = $('<div class="keyboarder-overlay"><div class="keyboarder-number"></div></div>');
