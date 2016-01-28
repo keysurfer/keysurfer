@@ -106,6 +106,10 @@ function doTop10(event, combo) {
 }
 
 function updateSelected(newIndex) {
+    if (overlays.length === 0) {
+        return;
+    }
+
     if ($selected) {
         $selected.deselect();
     }
