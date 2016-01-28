@@ -131,9 +131,17 @@ function updateInput(event) {
     // If enter key was pressed.
     if (event.keyCode === 13) {
         $input.val('');
+        $status.val('');
         if ($selected) {
             $selected.click();
         }
+        _.each(overlays, function (overlay) {
+            overlay.remove();
+        });
+
+        overlays = [];
+        $selected = null;
+        prevTarget = null;
         return false;
     }
 
