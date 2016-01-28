@@ -225,6 +225,17 @@ $(document).ready(function () {
         }
     });
 
+    $('input[type="submit"]').each(function (i, e) {
+        var $e = $(e);
+        var text = $e.val().trim().toLowerCase();
+        if (text !== '') {
+            links.push({
+                elem: $e,
+                text: text
+            })
+        }
+    });
+
     links = _.sortBy(links, function (link) {
         return link.elem.offset().top;
     });
