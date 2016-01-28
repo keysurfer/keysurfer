@@ -4,7 +4,7 @@ var active = false, // If keyboarder is active.
     $status,
     input,
     top10 = [],
-    prevTarget = '',// Previous entry in the input field.
+    prevTarget = null,// Previous entry in the input field.
     overlays = [], // List of overlay jQuery objects [overlayElem, elem]
     selectedIndex,// Index of overlays referring to selected.
     selected; // The currently selected element
@@ -45,11 +45,12 @@ function toggleKeyboarder() {
 
         overlays = [];
         selected = null;
-        prevTarget = '';
+        prevTarget = null;
     } else { // Activate keyboarder.
         active = true;
         elem.show();
         input.focus();
+        input.val('');
     }
 }
 
@@ -165,9 +166,9 @@ function updateInput(event) {
         return false;
     }
 
-    var target = input.val().toLowerCase();
+    var target = input.val().toLowerCase().trimLeft();
     if (target === prevTarget) {
-        return;
+        return true;
     }
     prevTarget = target;
 
@@ -179,8 +180,8 @@ function updateInput(event) {
     selected = null;
 
     if (target.length === 0) {
-        $status.text('');
-        return;
+        $status.text('Start typing to search');
+        return false;
     }
 
     _.each(links, function (link) {
@@ -199,6 +200,7 @@ function updateInput(event) {
     } else {
         $status.text('No links match');
     }
+    return false;
 }
 
 $(document).ready(function () {
