@@ -26,6 +26,7 @@ function toggleKeyboarder() {
         active = false;
         $keysurferElem.hide();
         $input.val('');
+        $status.val('');
 
         _.each(overlays, function (overlay) {
             overlay.remove();
@@ -39,6 +40,7 @@ function toggleKeyboarder() {
         $keysurferElem.show();
         $input.focus();
         $input.val('');
+        $status.val('');
     }
 }
 
