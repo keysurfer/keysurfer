@@ -26,6 +26,7 @@
 
 #keyboarder-content input {
     width: 200px;
+    padding: 3px;
 }
 
 .keyboarder-overlay {
