@@ -53,7 +53,7 @@ function toggleKeyboarder() {
 
 function updateSelected(newIndex) {
     if (selected) {
-        selected.removeClass('keyboarder-selected');
+        overlays[selectedIndex].overlayElem.removeClass('keyboarder-selected');
     }
 
     selectedIndex = newIndex % overlays.length;
