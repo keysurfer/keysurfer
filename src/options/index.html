@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Key Surfer Settings</title>
+</head>
+
+<style>
+    #alert {
+        padding: 10px;
+        border: 1px solid black;
+        border-radius: 5px;
+    }
+</style>
+<body>
+<p>
+    <a type="button" href="#" id="record">Click here to record a new hotkey</a>
+</p>
+
+<label for="combo">Keyboard Shortcut</label>
+<input type="text" id="combo" disabled/>
+
+<p>
+    <a type="button" href="#" id="save">Save</a>
+</p>
+
+<div id="alert" style="display: none;"></div>
+
+<script src="../../js/mousetrap.min.js"></script>
+<script src="../../js/mousetrap-record.min.js"></script>
+<script src="../../js/jquery.min.js"></script>
+<script src="options.js"></script>
+</body>
+</html>

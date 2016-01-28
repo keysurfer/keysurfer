@@ -253,7 +253,10 @@ $(document).ready(function () {
 
     $('body').append(elem);
 
-    Mousetrap.bind('command+shift+space', toggleKeyboarder);
-    Mousetrap.bind('ctrl+shift+space', toggleKeyboarder);
+    chrome.storage.sync.get({
+        sequence: 'shift+space'
+    }, function (items) {
+        Mousetrap.bind(items.sequence, toggleKeyboarder);
+    });
     Mousetrap.bind(['alt+1', 'alt+2', 'alt+3', 'alt+4', 'alt+5', 'alt+6', 'alt+7', 'alt+8', 'alt+9'], doTop10);
 });
