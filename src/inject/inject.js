@@ -1,27 +1,15 @@
+var $keysurferElem,
+    $status,
+    $input,
+    $selected; // The currently selected element
+
+
 var active = false, // If keyboarder is active.
     links = [], // [{elem, text}], sorted by elem's top offset.
-    elem,
-    $status,
-    input,
     top10 = [],
-    prevTarget = null,// Previous entry in the input field.
-    overlays = [], // List of overlay jQuery objects [overlayElem, elem]
-    selectedIndex,// Index of overlays referring to selected.
-    selected; // The currently selected element
-
-function newOverlay(elem) {
-    var useElem = elem;
-
-    if (elem.parent().prop('tagName') === 'LI') {
-        useElem = elem.parent();
-    }
-
-    var overlay = $('<div class="keyboarder-overlay"><div class="keyboarder-number"></div></div>');
-    overlay.width(useElem.outerWidth());
-    overlay.height(useElem.outerHeight());
-    overlay.offset(useElem.offset());
-    return overlay;
-}
+    prevTarget = null,// Previous entry in the $input field.
+    overlays = [], // List of overlay jQuery objects [overlayElem, $elem]
+    selectedIndex; // Index of overlays referring to selected.
 
 function nextSelection() {
     updateSelected(selectedIndex + 1);
@@ -36,21 +24,21 @@ function prevSelection() {
 function toggleKeyboarder() {
     if (active) { // Deactivate keyboarder.
         active = false;
-        elem.hide();
-        input.val('');
+        $keysurferElem.hide();
+        $input.val('');
 
         _.each(overlays, function (overlay) {
-            overlay.overlayElem.remove();
+            overlay.remove();
         });
 
         overlays = [];
-        selected = null;
+        $selected = null;
         prevTarget = null;
     } else { // Activate keyboarder.
         active = true;
-        elem.show();
-        input.focus();
-        input.val('');
+        $keysurferElem.show();
+        $input.focus();
+        $input.val('');
     }
 }
 
@@ -62,7 +50,7 @@ function bisectLeft(y) {
 
     while (low < high) {
         mid = Math.floor((low + high) / 2);
-        item = overlays[mid].elem.offset().top;
+        item = overlays[mid].top();
 
         if (item < y) {
             low = mid + 1;
@@ -76,7 +64,7 @@ function bisectLeft(y) {
 function resetTop10() {
     // Remove old top 10.
     _.each(top10, function (overlay) {
-        overlay.overlayElem.find('.keyboarder-number').hide();
+        overlay.hideNumber();
     });
 
     top10 = [];
@@ -87,21 +75,15 @@ function resetTop10() {
          i = (i + 1) % overlays.length) {
         var overlay = overlays[i];
 
-        // If it's beyond the bottom of the screen then stop looking.
-        if (overlay.elem.offset().top > window.scrollY + window.innerHeight) {
-            break;
-        }
-
-        // If it's above the top of the screen then stop looking.
-        if (overlay.elem.offset().top < window.scrollY) {
+        if (!overlay.isOnScreen()) {
             break;
         }
 
         top10.push(overlay);
-        overlay.overlayElem.find('.keyboarder-number').show().text('alt+' + top10.length);
+        overlay.showNumber('alt+' + top10.length);
     }
 
-    overlays[selectedIndex].overlayElem.find('.keyboarder-number').show().text('enter');
+    overlays[selectedIndex].showNumber('enter');
 }
 
 function doTop10(event, combo) {
@@ -122,9 +104,8 @@ function doTop10(event, combo) {
 }
 
 function updateSelected(newIndex) {
-    if (selected) {
-        overlays[selectedIndex].overlayElem.removeClass('keyboarder-selected');
-        overlays[selectedIndex].overlayElem.find('.keyboarder-number').hide();
+    if ($selected) {
+        $selected.deselect();
     }
 
     selectedIndex = newIndex % overlays.length;
@@ -132,11 +113,11 @@ function updateSelected(newIndex) {
         selectedIndex = overlays.length - 1;
     }
 
-    selected = overlays[selectedIndex].elem;
-    overlays[selectedIndex].overlayElem.addClass('keyboarder-selected');
+    $selected = overlays[selectedIndex];
+    $selected.select();
 
     $('html, body').animate({
-        scrollTop: selected.offset().top - 10
+        scrollTop: $selected.top() - 10
     }, 100, resetTop10);
 
     $status.text((selectedIndex + 1) + ' of ' + overlays.length);
@@ -149,9 +130,9 @@ function updateInput(event) {
 
     // If enter key was pressed.
     if (event.keyCode === 13) {
-        input.val('');
-        if (selected) {
-            $(selected)[0].click()
+        $input.val('');
+        if ($selected) {
+            $selected.click();
         }
         return false;
     }
@@ -166,18 +147,18 @@ function updateInput(event) {
         return false;
     }
 
-    var target = input.val().toLowerCase().trimLeft();
+    var target = $input.val().toLowerCase().trimLeft();
     if (target === prevTarget) {
         return true;
     }
     prevTarget = target;
 
     _.each(overlays, function (overlay) {
-        overlay.overlayElem.remove();
+        overlay.remove();
     });
 
     overlays = [];
-    selected = null;
+    $selected = null;
 
     if (target.length === 0) {
         $status.text('Start typing to search');
@@ -186,12 +167,8 @@ function updateInput(event) {
 
     _.each(links, function (link) {
         if (link.text.startsWith(target) && link.elem.is(':visible')) {
-            var overlay = newOverlay(link.elem);
-            $('body').append(overlay);
-            overlays.push({
-                overlayElem: overlay,
-                elem: link.elem
-            });
+            var overlay = new Overlay(link.elem);
+            overlays.push(overlay);
         }
     });
 
@@ -242,23 +219,28 @@ $(document).ready(function () {
         return link.elem.offset().top;
     });
 
-    elem = $('<div id="keyboarder-main"><div id="keyboarder-content"><input type="text" /><div id="keyboarder-status"></div></div></div></div>');
-    input = elem.find('input');
-    $status = elem.find('#keyboarder-status');
+    // Make keysurfer element and add it to the page.
+    $keysurferElem = $('<div id="keyboarder-main"><div id="keyboarder-content"><input type="text" /><div id="keyboarder-status"></div></div></div></div>');
+    $input = $keysurferElem.find('input');
+    $status = $keysurferElem.find('#keyboarder-status');
+    $('body').append($keysurferElem);
 
-    input.on('keyup', updateInput);
-    input.on('focusout', function () {
+    $input.on('keyup', updateInput);
+
+    // When keysurfer loses focus deactivate it.
+    $input.on('focusout', function () {
         if (active) {
             toggleKeyboarder();
         }
     });
 
-    $('body').append(elem);
-
+    // Get the hotkey for keysurfer and bind it to toggle activation.
     chrome.storage.sync.get({
         sequence: 'shift+space'
     }, function (items) {
         Mousetrap.bind(items.sequence, toggleKeyboarder);
     });
+
+    // Bind alt+# keys to clicking links.
     Mousetrap.bind(['alt+1', 'alt+2', 'alt+3', 'alt+4', 'alt+5', 'alt+6', 'alt+7', 'alt+8', 'alt+9'], doTop10);
 });
