@@ -22,17 +22,12 @@ function newOverlay(elem) {
 }
 
 function nextSelection() {
-    selectedIndex = (selectedIndex + 1) % overlays.length;
-    updateSelected();
+    updateSelected(selectedIndex + 1);
     return false;
 }
 
 function prevSelection() {
-    selectedIndex = selectedIndex - 1;
-    if (selectedIndex < 0) {
-        selectedIndex = overlays.length - 1;
-    }
-    updateSelected();
+    updateSelected(selectedIndex - 1);
     return false;
 }
 
@@ -56,8 +51,16 @@ function toggleKeyboarder() {
     }
 }
 
-function updateSelected() {
-    $('.keyboarder-overlay.keyboarder-selected').removeClass('keyboarder-selected');
+function updateSelected(newIndex) {
+    if (selected) {
+        selected.removeClass('keyboarder-selected');
+    }
+
+    selectedIndex = newIndex % overlays.length;
+    if (selectedIndex < 0) {
+        selectedIndex = overlays.length - 1;
+    }
+
     selected = overlays[selectedIndex].elem;
     overlays[selectedIndex].overlayElem.addClass('keyboarder-selected');
 
@@ -116,8 +119,7 @@ function updateInput(event) {
     });
 
     if (overlays.length > 0) {
-        selectedIndex = 0;
-        updateSelected();
+        updateSelected(0);
     }
 }
 
