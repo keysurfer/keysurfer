@@ -175,7 +175,7 @@ function updateInput(event) {
     $selected = null;
 
     if (target.length === 0) {
-        $status.text('Start typing to search');
+        $status.html('<span id="keyboarder-status-none">Start typing to search</span>');
         return false;
     }
 

@@ -22,11 +22,23 @@
     display: inline-block;
     width: 80px;
     vertical-align: middle;
+    font-size: 18px;
+    line-height: 1;
+    font-family: Lato, Helvetica, Arial, sans-serif;
+}
+
+#keyboarder-status-none {
+    font-size: 14px;
+    line-height: 18px;
 }
 
 #keyboarder-content input {
     width: 200px;
+    font-size: 18px;
+    line-height: 31px;
     padding: 3px;
+    margin: 0;
+    font-family: Lato, Helvetica, Arial, sans-serif;
 }
 
 .keyboarder-overlay {
@@ -47,6 +59,9 @@
     vertical-align: middle;
     background-color: rgba(17, 175, 255, 0.8);
     border: 1px solid rgba(0, 0, 0, 0.5);
+    font-size: 13px;
+    color: #000000;
+    font-family: Lato, Helvetica, Arial, sans-serif;
 }
 
 .keyboarder-overlay.keyboarder-selected {
