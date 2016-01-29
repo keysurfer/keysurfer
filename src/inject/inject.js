@@ -195,37 +195,32 @@ function updateInput(event) {
     return false;
 }
 
-$(document).ready(function () {
-    // Allow our extension when user is in textfield.
-    Mousetrap.prototype.stopCallback = function () {
-        return false;
-    };
-
+function gatherLinks() {
     $('a').each(function (i, e) {
-        var $e = $(e);
+        var $a = $(e);
 
-        var text = $e.text().trim().toLowerCase();
+        var text = $a.text().trim().toLowerCase();
 
-        var ariaLabel = $e.attr('aria-label');
+        var ariaLabel = $a.attr('aria-label');
         if (ariaLabel && text.length === 0) {
             links.push({
-                elem: $e,
+                elem: $a,
                 text: ariaLabel.toLowerCase()
             });
         } else {
             links.push({
-                elem: $e,
+                elem: $a,
                 text: text
             });
         }
     });
 
     $('button').each(function (i, e) {
-        var $e = $(e);
-        if ($e.attr('type') === 'submit') {
+        var $button = $(e);
+        if ($button.attr('type') === 'submit') {
             links.push({
-                elem: $e,
-                text: $e.text().trim().toLowerCase()
+                elem: $button,
+                text: $button.text().trim().toLowerCase()
             })
         }
     });
@@ -234,13 +229,13 @@ $(document).ready(function () {
     var seenInputs = {};
 
     $('input[type="submit"]').each(function (i, e) {
-        var $e = $(e);
-        var text = $e.val().trim().toLowerCase();
+        var $input = $(e);
+        var text = $input.val().trim().toLowerCase();
 
         if (text !== '') {
-            seenInputs[$e[0].outerHTML] = true;
+            seenInputs[$input[0].outerHTML] = true;
             links.push({
-                elem: $e,
+                elem: $input,
                 text: text
             })
         }
@@ -276,6 +271,15 @@ $(document).ready(function () {
     links = _.sortBy(links, function (link) {
         return link.elem.offset().top;
     });
+}
+
+$(document).ready(function () {
+    // Allow our extension when user is in textfield.
+    Mousetrap.prototype.stopCallback = function () {
+        return false;
+    };
+
+    gatherLinks();
 
     // Make keysurfer element and add it to the page.
     $keysurferElem = $('<div id="keyboarder-main"><div id="keyboarder-content"><input type="text" /><div id="keyboarder-status"></div></div></div></div>');
