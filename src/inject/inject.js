@@ -42,6 +42,7 @@ function toggleKeyboarder() {
         $input.val('');
         $status.val('');
     }
+    return false;
 }
 
 function bisectLeft(y) {
