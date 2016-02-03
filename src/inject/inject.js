@@ -36,6 +36,7 @@ function toggleKeyboarder() {
         $selected = null;
         prevTarget = null;
     } else { // Activate keyboarder.
+        gatherLinks();
         active = true;
         $keysurferElem.show();
         $input.focus();
@@ -196,6 +197,8 @@ function updateInput(event) {
 }
 
 function gatherLinks() {
+    links = [];
+
     $('a').each(function (i, e) {
         var $a = $(e);
 
@@ -278,8 +281,6 @@ $(document).ready(function () {
     Mousetrap.prototype.stopCallback = function () {
         return false;
     };
-
-    gatherLinks();
 
     // Make keysurfer element and add it to the page.
     $keysurferElem = $('<div id="keyboarder-main"><div id="keyboarder-content"><input type="text" /><div id="keyboarder-status"></div></div></div></div>');
