@@ -153,6 +153,11 @@ function updateInput(event) {
         return false;
     }
 
+    // If esc key was pressed.
+    if (event.keyCode === 27) {
+        toggleKeyboarder();
+    }
+
     if (event.keyCode === 40) { // Down key.
         nextSelection();
         return false;
